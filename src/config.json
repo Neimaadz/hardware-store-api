@@ -1,0 +1,13 @@
+{
+    "rootAPI": "/hardware-store-api/v1/",
+    "port": 3306,
+    "db": {
+        "host": "localhost",
+        "database": "hardware-store",
+        "user": "localhost",
+        "password": "localhost",
+        "port": "8889"
+    },
+    "privateKey": "ZAIid$Zsm@adz12eàZç",
+    "saltRounds": 10
+}
