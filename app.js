@@ -1,7 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-const config = require('./src/config.json')
+const config = require('./app-config.json')
 const jwt = require('jsonwebtoken');
 const app = express()
 
