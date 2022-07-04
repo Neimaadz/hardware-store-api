@@ -3,7 +3,7 @@ var AuthenticationService = require('./authentication-service')
 
 
 exports.postSignIn = (req, res) => {
-    var username = req.body.identifiant;
+    var username = req.body.username;
     var password = req.body.password;
 
     AuthenticationService.postSignIn(username, password, (err, data) => {

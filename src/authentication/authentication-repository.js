@@ -2,7 +2,7 @@ const db = require("../database-utils");
 
 
 exports.postSignIn = (username, result) => {
-    db.query('SELECT * FROM connexion WHERE identifiant = ?', username, (err, res) => {
+    db.query('SELECT * FROM user WHERE username = ?', username, (err, res) => {
         if (err) {
             return result(err, res);
         }
