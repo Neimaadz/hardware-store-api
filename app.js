@@ -7,7 +7,7 @@ const app = express()
 
 let router = express.Router()    //permet de créer une route
 var productController = require('./src/product/product-controller')
-var mainPageManagerController = require('./src/main-page-manager/main-page-manager-controller')
+var homePageManagerController = require('./src/homepage-manager/homepage-manager-controller')
 var authenticationController = require('./src/authentication/authentication-controller')
 
 //Middlewares
@@ -55,11 +55,11 @@ router.delete('product/:id', checkToken, productController.deleteProduct)
 ====                 MAIN PAGE MANAGER                                            ====
 ======================================================================================
 */
-router.get('/welcomeImages', checkToken, mainPageManagerController.getWelcomeImage)
-router.put('/welcomeImages/:id', checkToken, mainPageManagerController.putWelcomeImage)
+router.get('/welcomeImages', checkToken, homePageManagerController.getWelcomeImage)
+router.put('/welcomeImages/:id', checkToken, homePageManagerController.putWelcomeImage)
 
-router.get('/newsImages', checkToken, mainPageManagerController.getNewsImage)
-router.put('/newsImages/:id', checkToken, mainPageManagerController.putNewsImage)
+router.get('/newsImages', checkToken, homePageManagerController.getNewsImage)
+router.put('/newsImages/:id', checkToken, homePageManagerController.putNewsImage)
 
 
 app.use(config.rootAPI, router)   //permet de créer une route

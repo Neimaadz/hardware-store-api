@@ -1,9 +1,9 @@
-var mainPageManagerService = require('./main-page-manager-service')
+var homePageManagerService = require('./homepage-manager-service')
 
 
 
 exports.getWelcomeImage = (req, res) => {
-    mainPageManagerService.getWelcomeImage((err, data) => {
+    homePageManagerService.getWelcomeImage((err, data) => {
         if (err) {
             res.sendStatus(500);
         }
@@ -13,7 +13,7 @@ exports.getWelcomeImage = (req, res) => {
     })
 }
 exports.putWelcomeImage = (req, res) => {
-    mainPageManagerService.putWelcomeImage(req.params.id, req.body.image, (err, data) => {
+    homePageManagerService.putWelcomeImage(req.params.id, req.body.image, (err, data) => {
         if (err) {
             if (err.statusCode === 404) {
                 res.sendStatus(404);
@@ -25,7 +25,7 @@ exports.putWelcomeImage = (req, res) => {
     })
 }
 exports.getNewsImage = (req, res) => {
-    mainPageManagerService.getNewsImage(() => {
+    homePageManagerService.getNewsImage(() => {
         if (err) {
             res.sendStatus(500);
         }
@@ -35,7 +35,7 @@ exports.getNewsImage = (req, res) => {
     })
 }
 exports.putNewsImage = (req, res) => {
-    mainPageManagerService.putNewsImage(req.params.id, req.body.image, (err, data) => {
+    homePageManagerService.putNewsImage(req.params.id, req.body.image, (err, data) => {
         if (err) {
             if (err.statusCode === 404) {
                 res.sendStatus(404);

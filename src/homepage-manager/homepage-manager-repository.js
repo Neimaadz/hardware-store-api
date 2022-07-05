@@ -3,7 +3,7 @@ const db = require("../database-utils");
 
 
 exports.findAllWelcomeImage  = (result) => {
-    db.query('SELECT * FROM main_image', (err, res) => {
+    db.query('SELECT * FROM homepage', (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -11,7 +11,7 @@ exports.findAllWelcomeImage  = (result) => {
     })
 }
 exports.updateByIdWelcomeImage  = (id, image, result) => {
-    db.query('UPDATE main_image SET image = ? WHERE id = ?', [image, id], (err, res) => {
+    db.query('UPDATE homepage SET image = ? WHERE id = ?', [image, id], (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -22,7 +22,7 @@ exports.updateByIdWelcomeImage  = (id, image, result) => {
     })
 }
 exports.findAllNewsImage  = (result) => {
-    db.query('SELECT * FROM main_image', (err, res) => {
+    db.query('SELECT * FROM homepage', (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -30,7 +30,7 @@ exports.findAllNewsImage  = (result) => {
     })
 }
 exports.updateByIdNewsImage  = (id, image, result) => {
-    db.query('UPDATE main_image SET image = ? WHERE id = ?', [image, id], (err, res) => {
+    db.query('UPDATE homepage SET image = ? WHERE id = ?', [image, id], (err, res) => {
         if (err) {
             return result(err, res);
         }
