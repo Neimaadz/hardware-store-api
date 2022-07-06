@@ -34,7 +34,7 @@ exports.postProduct = (req, res) => {
     );
 
     productService.postProduct(product, (err, data) => {
-            if (err) {
+        if (err) {
             res.sendStatus(500);
         }
         else{
@@ -44,7 +44,7 @@ exports.postProduct = (req, res) => {
 }
 
 exports.putProduct = (req, res) => {
-    const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme);
 
     productService.putProduct(req.params.id, product, (err, data) => {

@@ -1,6 +1,4 @@
 
-
-
 exports.Product = function (id, name, fabricant, categorie, longueur, diametre, taille, composition, norme, image) {
     this.id = id;
     this.name = name;
@@ -15,14 +13,12 @@ exports.Product = function (id, name, fabricant, categorie, longueur, diametre, 
 
 }
 
+exports.Authentication = function (token, user) {
+    this.token = token;
+    this.user = user;
+}
+
 exports.User = function (id, username) {
     this.id = id;
     this.username = username;
-}
-
-
-exports.TokenUserPayload = function (token, user) {
-    this.token = token;
-    this.user = user;
-
 }

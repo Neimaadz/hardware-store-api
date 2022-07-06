@@ -1,5 +1,5 @@
 {
-    "rootAPI": "/hardware-store-api/v1/",
+    "rootAPI": "/hardware-store-api/v1",
     "port": 3306,
     "db": {
         "host": "localhost",

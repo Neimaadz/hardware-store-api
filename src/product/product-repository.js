@@ -3,7 +3,7 @@ const db = require("../database-utils");
 
 
 exports.findById = (id, result) => {
-    db.query('SELECT * FROM products WHERE id = ?', id, (err, res) => {
+    db.query('SELECT * FROM product WHERE id = ?', id, (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -15,7 +15,7 @@ exports.findById = (id, result) => {
 }
 
 exports.findAll = (result) => {
-    db.query('SELECT * FROM products', (err, res) => {
+    db.query('SELECT * FROM product', (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -24,7 +24,7 @@ exports.findAll = (result) => {
 }
 
 exports.create = (product, result) => {
-    db.query('INSERT INTO products SET ?', product, (err, res) => {
+    db.query('INSERT INTO product SET ?', product, (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -37,7 +37,7 @@ exports.updataById = (id, product, result) => {
     // this.findById(id, (err, res) => {
     //     return product = res;
     // })
-    db.query('UPDATE products SET ? WHERE id = ?', [product, id], (err, res) => {
+    db.query('UPDATE product SET ? WHERE id = ?', [product, id], (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -49,7 +49,7 @@ exports.updataById = (id, product, result) => {
 }
 
 exports.deleteById = (id, result) => {
-    db.query('DELETE FROM products WHERE id = ?', id, (err, res) => {
+    db.query('DELETE FROM product WHERE id = ?', id, (err, res) => {
         if (err) {
             return result(err, res);
         }
