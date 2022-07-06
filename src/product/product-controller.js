@@ -1,5 +1,5 @@
 var productService = require('./product-service')
-const Product = require('./product');
+const Models = require('../models');
 
 
 
@@ -29,7 +29,7 @@ exports.getProducts = (req, res) => {
 }
 
 exports.postProduct = (req, res) => {
-    const product = new Product(req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.body.image
     );
 
@@ -44,7 +44,7 @@ exports.postProduct = (req, res) => {
 }
 
 exports.putProduct = (req, res) => {
-    const product = new Product(req.params.id, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme);
 
     productService.putProduct(req.params.id, product, (err, data) => {

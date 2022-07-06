@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const config = require('./app-config.json')
 const jwt = require('jsonwebtoken');
 const app = express()
+const cors = require('cors');
 
 let router = express.Router()    //permet de créer une route
 var productController = require('./src/product/product-controller')
@@ -11,6 +12,7 @@ var homePageManagerController = require('./src/homepage-manager/homepage-manager
 var authenticationController = require('./src/authentication/authentication-controller')
 
 //Middlewares
+app.use(cors())
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

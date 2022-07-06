@@ -8,7 +8,8 @@ exports.postSignIn = (username, result) => {
         }
         if (res.length) {
             let user = {
-                idendifiant: res[0].idendifiant,
+                id: res[0].id,
+                username: res[0].username,
                 password: res[0].password,
             };
             return result(err, user);
