@@ -46,8 +46,8 @@ router.post('/authentication', authenticationController.postSignIn)
 ====                 PRODUCTS                                                     ====
 ======================================================================================
 */
-router.get('/products', checkToken, productController.getProducts)
-router.get('/product/:id', checkToken, productController.getProduct)
+router.get('/products', productController.getProducts)
+router.get('/product/:id', productController.getProduct)
 router.post('/product', checkToken, productController.postProduct)
 router.put('/product/:id', checkToken, productController.putProduct)
 router.delete('/product/:id', checkToken, productController.deleteProduct)
