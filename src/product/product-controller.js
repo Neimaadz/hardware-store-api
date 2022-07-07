@@ -29,7 +29,7 @@ exports.getProducts = (req, res) => {
 }
 
 exports.postProduct = (req, res) => {
-    const product = new Models.Product(req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(null, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.body.image
     );
 
