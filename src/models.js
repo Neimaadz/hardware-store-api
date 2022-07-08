@@ -10,7 +10,6 @@ exports.Product = function (id, name, fabricant, type, longueur, diametre, taill
     this.composition = composition;
     this.norme = norme;
     this.image = image;
-
 }
 
 exports.Authentication = function (token, user) {
