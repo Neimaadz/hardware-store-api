@@ -1,5 +1,5 @@
 var productRepository = require('./product-repository')
-var productTypeRepository = require('./productType-repository')
+var productTypeRepository = require('./product-type-repository')
 var fs = require('fs');     // allow access to File System
 
 
