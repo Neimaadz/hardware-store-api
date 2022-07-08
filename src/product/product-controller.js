@@ -2,7 +2,6 @@ var productService = require('./product-service')
 const Models = require('../models');
 
 
-
 exports.getProductTypes = (req, res) => {
     productService.getProductTypes((err, data) => {
         if (err) {
@@ -40,12 +39,16 @@ exports.getProducts = (req, res) => {
 
 exports.postProduct = (req, res) => {
     const product = new Models.Product(null, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
-        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.body.image
-    );
+        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file.filename);
 
     productService.postProduct(product, (err, data) => {
         if (err) {
-            res.sendStatus(500);
+            if (err.statusCode === 404) {
+                res.status(404).json(err.message);
+            }
+            else {
+                res.sendStatus(500);
+            }
         }
         else{
             res.send(data);
@@ -55,12 +58,12 @@ exports.postProduct = (req, res) => {
 
 exports.putProduct = (req, res) => {
     const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
-        req.body.diametre, req.body.taille, req.body.composition, req.body.norme);
+        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file.filename);
 
     productService.putProduct(req.params.id, product, (err, data) => {
         if (err) {
             if (err.statusCode === 404) {
-                res.sendStatus(404);
+                res.status(404).json(err.message);
             }
         }
         else {

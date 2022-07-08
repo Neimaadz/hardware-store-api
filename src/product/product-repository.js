@@ -32,7 +32,7 @@ exports.create = (product, result) => {
     })
 }
 
-exports.updataById = (id, product, result) => {
+exports.updateById = (id, product, result) => {
     // let product;
     // this.findById(id, (err, res) => {
     //     return product = res;

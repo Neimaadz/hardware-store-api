@@ -1,4 +1,5 @@
 
+
 exports.Product = function (id, name, fabricant, type, longueur, diametre, taille, composition, norme, image) {
     this.id = id;
     this.name = name;
