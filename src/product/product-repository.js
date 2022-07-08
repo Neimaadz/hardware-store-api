@@ -3,7 +3,7 @@ const db = require("../database-utils");
 
 
 exports.findById = (id, result) => {
-    db.query('SELECT * FROM product WHERE id = ?', id, (err, res) => {
+    db.query('SELECT product.*, product_type.type FROM product INNER JOIN product_type ON product.type = product_type.id WHERE product.id = ?', id, (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -15,7 +15,7 @@ exports.findById = (id, result) => {
 }
 
 exports.findAll = (result) => {
-    db.query('SELECT * FROM product', (err, res) => {
+    db.query('SELECT product.*, product_type.type FROM product INNER JOIN product_type ON product.type = product_type.id', (err, res) => {
         if (err) {
             return result(err, res);
         }

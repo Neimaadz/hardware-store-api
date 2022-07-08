@@ -3,6 +3,16 @@ const Models = require('../models');
 
 
 
+exports.getProductTypes = (req, res) => {
+    productService.getProductTypes((err, data) => {
+        if (err) {
+            res.sendStatus(500);
+        }
+        else{
+            res.send(data);
+        }
+    })
+}
 
 exports.getProduct = (req, res) => {
     productService.getProduct(req.params.id, (err, data) => {
@@ -29,7 +39,7 @@ exports.getProducts = (req, res) => {
 }
 
 exports.postProduct = (req, res) => {
-    const product = new Models.Product(null, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(null, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.body.image
     );
 
@@ -44,7 +54,7 @@ exports.postProduct = (req, res) => {
 }
 
 exports.putProduct = (req, res) => {
-    const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.categorie, req.body.longueur,
+    const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
         req.body.diametre, req.body.taille, req.body.composition, req.body.norme);
 
     productService.putProduct(req.params.id, product, (err, data) => {

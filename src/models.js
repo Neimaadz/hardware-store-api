@@ -1,9 +1,9 @@
 
-exports.Product = function (id, name, fabricant, categorie, longueur, diametre, taille, composition, norme, image) {
+exports.Product = function (id, name, fabricant, type, longueur, diametre, taille, composition, norme, image) {
     this.id = id;
     this.name = name;
     this.fabricant = fabricant;
-    this.categorie = categorie;
+    this.type = type;
     this.longueur = longueur;
     this.diametre = diametre;
     this.taille = taille;

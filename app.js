@@ -46,6 +46,8 @@ router.post('/authentication', authenticationController.postSignIn)
 ====                 PRODUCTS                                                     ====
 ======================================================================================
 */
+router.get('/productTypes', productController.getProductTypes)
+
 router.get('/products', productController.getProducts)
 router.get('/product/:id', productController.getProduct)
 router.post('/product', checkToken, productController.postProduct)
