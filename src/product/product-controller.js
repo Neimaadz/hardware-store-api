@@ -58,7 +58,7 @@ exports.postProduct = (req, res) => {
 
 exports.putProduct = (req, res) => {
     const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
-        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file.filename);
+        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file);
 
     productService.putProduct(req.params.id, product, (err, data) => {
         if (err) {

@@ -28,13 +28,6 @@ exports.postProduct = (product, result) => {
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
-            // delete old image stored on server
-            this.deleteImageFileProduct(id, (err, data) => {
-                if(err){
-                    return result(err, data);
-                }
-            });
-
             productRepository.create(product, (err, data) => {
                 return result(err, data);
             });
@@ -45,17 +38,25 @@ exports.postProduct = (product, result) => {
     });
 }
 exports.putProduct = (id, product, result) => {
+
+    // HANDLE REQUEST NO IMAGE FILE
+    // if there is no image in request file
+    if(!product.image) {
+        this.getProduct(id, (err, data) => {
+            product.image = data.image;
+        })
+    }
+    else {
+        product.image = product.image.filename;
+
+        // delete old image stored on server
+        this.deleteImageFileProduct(id);
+    }
+
     this.getProductTypes((err, productTypes) => {
         
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
-
-            // delete old image stored on server
-            this.deleteImageFileProduct(id, (err, data) => {
-                if(err){
-                    return result(err, data);
-                }
-            });
 
             productRepository.updateById(id, product, (err, data) => {
                 return result(err, data);
@@ -84,10 +85,6 @@ exports.deleteProduct = (id, result) => {
 
 exports.deleteImageFileProduct = (id, result) => {
     this.getProduct(id, (err, data) => {
-        fs.unlink('public/images/products/' + data.image, (error) => {
-            if (error) {
-                return result(error, null);
-            }
-        })
+        fs.unlink('public/images/products/' + data.image, (error) => {})
     })
 }
