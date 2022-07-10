@@ -117,15 +117,3 @@ exports.deleteImageFileProduct = (id, result) => {
         fs.unlink('public/images/PRODUCT/' + data.image, (error) => {})
     })
 }
-
-
-exports.resizeImageFile = (imageFile) => {
-    const { filename: image } = imageFile;
-    
-    sharp(imageFile.path)
-        .resize(600, 600)
-        .jpeg({ quality: 60 })
-        .toFile(path.resolve(imageFile.destination, 'PRODUCT', image), (err, info) => {
-            fs.unlink(imageFile.destination + image, (error) => {})
-        })
-}
