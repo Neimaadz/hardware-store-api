@@ -31,7 +31,7 @@ exports.getProduct = (id, result) => {
 
 /* Get all products
  * Params()
- * Return an array of objects
+ * Return an array of object Product
  */
 exports.getProducts = (result) => {
     productRepository.findAll((err, data) => {
