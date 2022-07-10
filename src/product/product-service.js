@@ -1,6 +1,8 @@
 var productRepository = require('./product-repository')
 var productTypeRepository = require('./product-type-repository')
+const sharp = require('sharp');     // Resize image file
 var fs = require('fs');     // allow access to File System
+const path = require('path');
 
 
 
@@ -23,49 +25,77 @@ exports.getProducts = (result) => {
     })
 }
 exports.postProduct = (product, result) => {
+    const { filename: image } = product.image;
+    const productImageFile = product.image;
+    product.image = product.image.filename;
+
+
     this.getProductTypes((err, productTypes) => {
-        
+            
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
             productRepository.create(product, (err, data) => {
-                return result(err, data);
+                sharp(productImageFile.path)
+                    .resize(600, 600)
+                    .jpeg({ quality: 60 })
+                    .toFile(path.resolve(productImageFile.destination, 'resized', image), (err, info) => {
+                        fs.unlink(productImageFile.destination + image, (error) => {})
+                        
+                        return result(err, data);
+                    })
             });
         }
         else {
+            fs.unlink(productImageFile.destination + image, (error) => {})
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
 }
 exports.putProduct = (id, product, result) => {
+    const productImageFile = product.image;
 
     // HANDLE REQUEST NO IMAGE FILE
     // if there is no image in request file
-    if(!product.image) {
+    if(!productImageFile) {
         this.getProduct(id, (err, data) => {
             product.image = data.image;
         })
     }
     else {
-        product.image = product.image.filename;
-
+        product.image = productImageFile.filename;
         // delete old image stored on server
         this.deleteImageFileProduct(id);
     }
-
+    
     this.getProductTypes((err, productTypes) => {
-        
+
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
             productRepository.updateById(id, product, (err, data) => {
-                return result(err, data);
+                
+                if(!productImageFile) {
+                    return result(err, data);
+                }
+
+                // Resize image
+                sharp(productImageFile.path)
+                .resize(600, 600)
+                .jpeg({ quality: 60 })
+                .toFile(path.resolve(productImageFile.destination, 'resized', product.image), (err, info) => {
+                    fs.unlink(productImageFile.destination + product.image, (error) => {})
+                
+                    return result(err, data);
+                })
             });
         }
         else {
+            fs.unlink(productImageFile.destination + image, (error) => {})
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
+    
 }
 exports.deleteProduct = (id, result) => {
     this.deleteImageFileProduct(id);
@@ -85,6 +115,18 @@ exports.deleteProduct = (id, result) => {
 
 exports.deleteImageFileProduct = (id, result) => {
     this.getProduct(id, (err, data) => {
-        fs.unlink('public/images/products/' + data.image, (error) => {})
+        fs.unlink('public/images/products/resized/' + data.image, (error) => {})
     })
+}
+
+
+exports.resizeImageFile = (imageFile) => {
+    const { filename: image } = imageFile;
+    
+    sharp(imageFile.path)
+        .resize(600, 600)
+        .jpeg({ quality: 60 })
+        .toFile(path.resolve(imageFile.destination, 'resized', image), (err, info) => {
+            fs.unlink(imageFile.destination + image, (error) => {})
+        })
 }
