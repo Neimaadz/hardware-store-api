@@ -31,12 +31,12 @@ exports.postProduct = (product, result) => {
     const productImageFile = product.image;
     product.image = product.image.filename;
 
-    this.getProductTypes((err, productTypes) => {
-            
+    this.getProductTypes((err, productTypes) => {   
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
             productRepository.create(product, (err, data) => {
+                // Resize image
                 sharp(productImageFile.path)
                     .resize(600, 600)
                     .jpeg({ quality: 60 })
@@ -70,12 +70,10 @@ exports.putProduct = (id, product, result) => {
     }
     
     this.getProductTypes((err, productTypes) => {
-
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
             productRepository.updateById(id, product, (err, data) => {
-                
                 if(!productImageFile) {
                     return result(err, data);
                 }
