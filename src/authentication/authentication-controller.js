@@ -1,4 +1,4 @@
-var AuthenticationService = require('./authentication-service')
+const AuthenticationService = require('./authentication-service')
 
 
 

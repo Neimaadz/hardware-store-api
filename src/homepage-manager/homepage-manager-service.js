@@ -1,4 +1,4 @@
-var homePageManagerRepository = require('./homepage-manager-repository')
+const homePageManagerRepository = require('./homepage-manager-repository')
 
 
 

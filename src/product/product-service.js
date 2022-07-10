@@ -1,8 +1,10 @@
-var productRepository = require('./product-repository')
-var productTypeRepository = require('./product-type-repository')
 const sharp = require('sharp');     // Resize image file
-var fs = require('fs');     // allow access to File System
+const fs = require('fs');     // allow access to File System
 const path = require('path');
+
+// *******************************************
+const productRepository = require('./product-repository')
+const productTypeRepository = require('./product-type-repository')
 
 
 
@@ -29,7 +31,6 @@ exports.postProduct = (product, result) => {
     const productImageFile = product.image;
     product.image = product.image.filename;
 
-
     this.getProductTypes((err, productTypes) => {
             
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
@@ -39,7 +40,7 @@ exports.postProduct = (product, result) => {
                 sharp(productImageFile.path)
                     .resize(600, 600)
                     .jpeg({ quality: 60 })
-                    .toFile(path.resolve(productImageFile.destination, 'resized', image), (err, info) => {
+                    .toFile(path.resolve(productImageFile.destination, 'PRODUCT', image), (err, info) => {
                         fs.unlink(productImageFile.destination + image, (error) => {})
                         
                         return result(err, data);
@@ -81,13 +82,13 @@ exports.putProduct = (id, product, result) => {
 
                 // Resize image
                 sharp(productImageFile.path)
-                .resize(600, 600)
-                .jpeg({ quality: 60 })
-                .toFile(path.resolve(productImageFile.destination, 'resized', product.image), (err, info) => {
-                    fs.unlink(productImageFile.destination + product.image, (error) => {})
-                
-                    return result(err, data);
-                })
+                    .resize(600, 600)
+                    .jpeg({ quality: 60 })
+                    .toFile(path.resolve(productImageFile.destination, 'PRODUCT', product.image), (err, info) => {
+                        fs.unlink(productImageFile.destination + product.image, (error) => {})
+                    
+                        return result(err, data);
+                    })
             });
         }
         else {
@@ -115,7 +116,7 @@ exports.deleteProduct = (id, result) => {
 
 exports.deleteImageFileProduct = (id, result) => {
     this.getProduct(id, (err, data) => {
-        fs.unlink('public/images/products/resized/' + data.image, (error) => {})
+        fs.unlink('public/images/PRODUCT/' + data.image, (error) => {})
     })
 }
 
@@ -126,7 +127,7 @@ exports.resizeImageFile = (imageFile) => {
     sharp(imageFile.path)
         .resize(600, 600)
         .jpeg({ quality: 60 })
-        .toFile(path.resolve(imageFile.destination, 'resized', image), (err, info) => {
+        .toFile(path.resolve(imageFile.destination, 'PRODUCT', image), (err, info) => {
             fs.unlink(imageFile.destination + image, (error) => {})
         })
 }

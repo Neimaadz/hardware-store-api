@@ -1,4 +1,4 @@
-var homePageManagerService = require('./homepage-manager-service')
+const homePageManagerService = require('./homepage-manager-service')
 
 
 

@@ -1,10 +1,9 @@
-
 const config = require('../../app-config.json')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Models = require('../models');
+const authenticationRepository = require('./authentication-repository')
 
-var authenticationRepository = require('./authentication-repository')
 
 exports.postSignIn = (username, password, result) => {
     authenticationRepository.postSignIn(username, (err, data) => {

@@ -1,4 +1,4 @@
-var productService = require('./product-service')
+const productService = require('./product-service')
 const Models = require('../models');
 
 
