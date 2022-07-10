@@ -5,6 +5,11 @@ const Models = require('../models');
 const authenticationRepository = require('./authentication-repository')
 
 
+
+/* To authenticate
+ * Params(username, password)
+ * Return an object with the JWT and User infos (id and username)
+ */
 exports.postSignIn = (username, password, result) => {
     authenticationRepository.postSignIn(username, (err, data) => {
         const user = new Models.User(data.id, data.username);

@@ -7,7 +7,10 @@ const productRepository = require('./product-repository')
 const productTypeRepository = require('./product-type-repository')
 
 
-
+/* Get all products types
+ *
+ * Return an array of objects
+ */
 exports.getProductTypes = (result) => {
     productTypeRepository.findAll((err, data) => {
         return result(err, data);
@@ -15,17 +18,32 @@ exports.getProductTypes = (result) => {
 }
 
 
-
+/* Get one product by his ID
+ * Params(id)
+ * Return an object Product
+ */
 exports.getProduct = (id, result) => {
     productRepository.findById(id, (err, data) => {
         return result(err, data);
     })
 }
+
+
+/* Get all products
+ * Params()
+ * Return an array of objects
+ */
 exports.getProducts = (result) => {
     productRepository.findAll((err, data) => {
         return result(err, data);
     })
 }
+
+
+/* Create a product
+ * Params()
+ * Return
+ */
 exports.postProduct = (product, result) => {
     const { filename: image } = product.image;
     const productImageFile = product.image;
@@ -53,6 +71,12 @@ exports.postProduct = (product, result) => {
         }
     });
 }
+
+
+/* Update a product by his ID
+ * Params(id, product)
+ * Return an object Product
+ */
 exports.putProduct = (id, product, result) => {
     const productImageFile = product.image;
 
@@ -96,6 +120,12 @@ exports.putProduct = (id, product, result) => {
     });
     
 }
+
+
+/* Delete a product by his ID
+ * Params(id)
+ * Return
+ */
 exports.deleteProduct = (id, result) => {
     this.deleteImageFileProduct(id);
 
