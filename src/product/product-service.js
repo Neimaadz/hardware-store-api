@@ -3,6 +3,7 @@ const fs = require('fs');     // allow access to File System
 const path = require('path');
 
 // *******************************************
+const destination = 'public/images/'
 const productRepository = require('./product-repository')
 const productTypeRepository = require('./product-type-repository')
 
@@ -45,28 +46,31 @@ exports.getProducts = (result) => {
  * Return
  */
 exports.postProduct = (product, result) => {
-    const { filename: image } = product.image;
-    const productImageFile = product.image;
-    product.image = product.image.filename;
+    var filename = generateFilename(product.image.originalFilename)
+    var oldPath = product.image.filepath;
+    var newPath = destination + filename;
+    product.image = filename;
 
     this.getProductTypes((err, productTypes) => {   
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
 
             productRepository.create(product, (err, data) => {
-                // Resize image
-                sharp(productImageFile.path)
-                    .resize(600, 600)
-                    .jpeg({ quality: 60 })
-                    .toFile(path.resolve(productImageFile.destination, 'PRODUCT', image), (err, info) => {
-                        fs.unlink(productImageFile.destination + image, (error) => {})
-                        
-                        return result(err, data);
-                    })
+                // Move and save file to new path
+                fs.rename(oldPath, newPath, () => {
+                    // Resize image
+                    sharp(newPath)
+                        .resize(600, 600)
+                        .jpeg({ quality: 60 })
+                        .toFile(path.resolve(destination, 'PRODUCT', product.image), (err, info) => {
+                            fs.unlink(destination + product.image, (error) => {})
+                            
+                            return result(err, data);
+                        })
+                });
             });
         }
         else {
-            fs.unlink(productImageFile.destination + image, (error) => {})
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
@@ -78,6 +82,9 @@ exports.postProduct = (product, result) => {
  * Return an object Product
  */
 exports.putProduct = (id, product, result) => {
+    var filename;
+    var oldPath;
+    var newPath;
     const productImageFile = product.image;
 
     // HANDLE REQUEST NO IMAGE FILE
@@ -88,7 +95,10 @@ exports.putProduct = (id, product, result) => {
         })
     }
     else {
-        product.image = productImageFile.filename;
+        filename = generateFilename(product.image.originalFilename)
+        oldPath = product.image.filepath;
+        newPath = destination + filename;
+        product.image = filename;
         // delete old image stored on server
         this.deleteImageFileProduct(id);
     }
@@ -102,19 +112,21 @@ exports.putProduct = (id, product, result) => {
                     return result(err, data);
                 }
 
-                // Resize image
-                sharp(productImageFile.path)
-                    .resize(600, 600)
-                    .jpeg({ quality: 60 })
-                    .toFile(path.resolve(productImageFile.destination, 'PRODUCT', product.image), (err, info) => {
-                        fs.unlink(productImageFile.destination + product.image, (error) => {})
-                    
-                        return result(err, data);
-                    })
+                // Move and save file to new path
+                fs.rename(oldPath, newPath, () => {
+                    // Resize image
+                    sharp(newPath)
+                        .resize(600, 600)
+                        .jpeg({ quality: 60 })
+                        .toFile(path.resolve(destination, 'PRODUCT', product.image), (err, info) => {
+                            fs.unlink(destination + product.image, (error) => {})
+                            
+                            return result(err, data);
+                        })
+                });
             });
         }
         else {
-            fs.unlink(productImageFile.destination + image, (error) => {})
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
@@ -146,4 +158,7 @@ exports.deleteImageFileProduct = (id, result) => {
     this.getProduct(id, (err, data) => {
         fs.unlink('public/images/PRODUCT/' + data.image, (error) => {})
     })
+}
+function generateFilename(originalFilename) {
+    return 'image-' + Date.now() + path.extname(originalFilename);
 }

@@ -1,5 +1,17 @@
 const productService = require('./product-service')
 const Models = require('../models');
+const formidable = require('formidable');
+
+// *******************************************
+// parse a file upload
+const filters = {
+    filter: function ({name, originalFilename, mimetype}) {
+      // keep only images
+      return mimetype && mimetype.includes("image");
+    }
+};
+const form = formidable({ multiples: true, uploadDir: 'public/images/', filters });
+
 
 
 exports.getProductTypes = (req, res) => {
@@ -38,38 +50,48 @@ exports.getProducts = (req, res) => {
 }
 
 exports.postProduct = (req, res) => {
-    const product = new Models.Product(null, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
-        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file);
-
-    productService.postProduct(product, (err, data) => {
+    form.parse(req, (err, fields, files) => {
         if (err) {
-            if (err.statusCode === 404) {
-                res.status(404).json(err.message);
-            }
-            else {
-                res.sendStatus(500);
-            }
+            res.sendStatus(500);
         }
-        else{
-            res.send(data);
-        }
-    })
+        const product = new Models.Product(null, fields.name, fields.fabricant, fields.type, fields.longueur,
+            fields.diametre, fields.taille, fields.composition, fields.norme, files.image);
+    
+        productService.postProduct(product, (err, data) => {
+            if (err) {
+                if (err.statusCode === 404) {
+                    res.status(404).json(err.message);
+                }
+                else {
+                    res.sendStatus(500);
+                }
+            }
+            else{
+                res.send(data);
+            }
+        })
+    });
 }
 
 exports.putProduct = (req, res) => {
-    const product = new Models.Product(req.params.id, req.body.name, req.body.fabricant, req.body.type, req.body.longueur,
-        req.body.diametre, req.body.taille, req.body.composition, req.body.norme, req.file);
-
-    productService.putProduct(req.params.id, product, (err, data) => {
+    form.parse(req, (err, fields, files) => {
         if (err) {
-            if (err.statusCode === 404) {
-                res.status(404).json(err.message);
+            res.sendStatus(500);
+        }
+        const product = new Models.Product(req.params.id, fields.name, fields.fabricant, fields.type, fields.longueur,
+            fields.diametre, fields.taille, fields.composition, fields.norme, files.image);
+
+        productService.putProduct(req.params.id, product, (err, data) => {
+            if (err) {
+                if (err.statusCode === 404) {
+                    res.status(404).json(err.message);
+                }
             }
-        }
-        else {
-            res.send(data);
-        }
-    })
+            else {
+                res.send(data);
+            }
+        })
+    });
 }
 
 exports.deleteProduct = (req, res) => {

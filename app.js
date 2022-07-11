@@ -3,13 +3,10 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const multer = require("multer");
-const path = require('path');
 
 
 // *******************************************
 const config = require('./app-config.json')
-const helpers = require('./src/helpers');
 const productController = require('./src/product/product-controller')
 const homePageManagerController = require('./src/homepage-manager/homepage-manager-controller')
 const authenticationController = require('./src/authentication/authentication-controller')
@@ -18,18 +15,6 @@ const authenticationController = require('./src/authentication/authentication-co
 // *******************************************
 const app = express()
 let router = express.Router()    //permet de créer une route
-var storage = multer.diskStorage({        //Upload une image
-    destination: function(req, file, cb) {
-        cb(null, 'public/images/');
-    },
-
-    // By default, multer removes file extensions so let's add them back
-    filename: function(req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-// 'image' is the name of our file input field in the HTML form
-var uploadImageFile = multer({ storage: storage, fileFilter: helpers.imageFilter }).single('image');
 
 
 // Middlewares
@@ -73,8 +58,8 @@ router.get('/productTypes', productController.getProductTypes)
 
 router.get('/products', productController.getProducts)
 router.get('/product/:id', productController.getProduct)
-router.post('/product', [checkToken, uploadImageFile], productController.postProduct)
-router.put('/product/:id', [checkToken, uploadImageFile], productController.putProduct)
+router.post('/product', checkToken, productController.postProduct)
+router.put('/product/:id', checkToken, productController.putProduct)
 router.delete('/product/:id', checkToken, productController.deleteProduct)
 
 /*
