@@ -3,7 +3,7 @@ const db = require("../database-utils");
 
 
 exports.findAllWelcomeImage  = (result) => {
-    db.query('SELECT * FROM homepage', (err, res) => {
+    db.query('SELECT * FROM homepage WHERE type = welcome', (err, res) => {
         if (err) {
             return result(err, res);
         }
@@ -22,7 +22,7 @@ exports.updateByIdWelcomeImage  = (id, image, result) => {
     })
 }
 exports.findAllNewsImage  = (result) => {
-    db.query('SELECT * FROM homepage', (err, res) => {
+    db.query('SELECT * FROM homepage WHERE type = news', (err, res) => {
         if (err) {
             return result(err, res);
         }
