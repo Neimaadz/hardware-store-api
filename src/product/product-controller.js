@@ -3,7 +3,6 @@ const Models = require('../models');
 const formidable = require('formidable');
 
 // *******************************************
-// parse a file upload
 const filters = {
     filter: function ({name, originalFilename, mimetype}) {
       // keep only images
@@ -50,6 +49,7 @@ exports.getProducts = (req, res) => {
 }
 
 exports.postProduct = (req, res) => {
+    // parse form-data
     form.parse(req, (err, fields, files) => {
         if (err) {
             res.sendStatus(500);
