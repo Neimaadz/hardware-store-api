@@ -4,6 +4,7 @@ const path = require('path');
 
 // *******************************************
 const destination = 'public/images/'
+const finalPath = destination + 'PRODUCT/';
 const productRepository = require('./product-repository')
 const productTypeRepository = require('./product-type-repository')
 
@@ -47,8 +48,8 @@ exports.getProducts = (result) => {
  */
 exports.postProduct = (product, result) => {
     var filename = generateFilename(product.image.originalFilename)
-    var oldPath = product.image.filepath;
-    var newPath = destination + filename;
+    var oldPathTMP = product.image.filepath;
+    var newPathTMP = destination + filename;
     product.image = filename;
 
     this.getProductTypes((err, productTypes) => {   
@@ -57,13 +58,14 @@ exports.postProduct = (product, result) => {
 
             productRepository.create(product, (err, data) => {
                 // Move and save file to new path
-                fs.rename(oldPath, newPath, () => {
+                fs.rename(oldPathTMP, newPathTMP, () => {
                     // Resize image
-                    sharp(newPath)
+                    sharp(newPathTMP)
                         .resize(600, 600)
                         .jpeg({ quality: 60 })
-                        .toFile(path.resolve(destination, 'PRODUCT', product.image), (err, info) => {
-                            fs.unlink(destination + product.image, (error) => {})
+                        .toFile(path.resolve(finalPath, product.image), (err, info) => {
+                            // delete original unresized file
+                            fs.unlink(path.resolve(destination, product.image), (error) => {})
                             
                             return result(err, data);
                         })
@@ -71,6 +73,7 @@ exports.postProduct = (product, result) => {
             });
         }
         else {
+            fs.unlink(oldPathTMP, (error) => {})   // delete generated raw image file
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
@@ -83,8 +86,8 @@ exports.postProduct = (product, result) => {
  */
 exports.putProduct = (id, product, result) => {
     var filename;
-    var oldPath;
-    var newPath;
+    var oldPathTMP;
+    var newPathTMP;
     const productImageFile = product.image;
 
     // HANDLE REQUEST NO IMAGE FILE
@@ -96,16 +99,17 @@ exports.putProduct = (id, product, result) => {
     }
     else {
         filename = generateFilename(product.image.originalFilename)
-        oldPath = product.image.filepath;
-        newPath = destination + filename;
+        oldPathTMP = product.image.filepath;
+        newPathTMP = destination + filename;
         product.image = filename;
-        // delete old image stored on server
-        this.deleteImageFileProduct(id);
     }
     
     this.getProductTypes((err, productTypes) => {
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
+            
+            // delete old image stored on server
+            this.deleteImageFileProduct(id);
 
             productRepository.updateById(id, product, (err, data) => {
                 if(!productImageFile) {
@@ -113,13 +117,14 @@ exports.putProduct = (id, product, result) => {
                 }
 
                 // Move and save file to new path
-                fs.rename(oldPath, newPath, () => {
+                fs.rename(oldPathTMP, newPathTMP, () => {
                     // Resize image
-                    sharp(newPath)
+                    sharp(newPathTMP)
                         .resize(600, 600)
                         .jpeg({ quality: 60 })
-                        .toFile(path.resolve(destination, 'PRODUCT', product.image), (err, info) => {
-                            fs.unlink(destination + product.image, (error) => {})
+                        .toFile(path.resolve(finalPath, product.image), (err, info) => {
+                            // delete original unresized file
+                            fs.unlink(path.resolve(destination, product.image), (error) => {})
                             
                             return result(err, data);
                         })
@@ -127,6 +132,7 @@ exports.putProduct = (id, product, result) => {
             });
         }
         else {
+            fs.unlink(oldPathTMP, (error) => {})   // delete generated raw image file
             return result({ statusCode: 404, message: `Product Type Not Found.` }, null);
         }
     });
@@ -156,7 +162,7 @@ exports.deleteProduct = (id, result) => {
 
 exports.deleteImageFileProduct = (id, result) => {
     this.getProduct(id, (err, data) => {
-        fs.unlink('public/images/PRODUCT/' + data.image, (error) => {})
+        fs.unlink(path.resolve(finalPath, data.image), (error) => {})
     })
 }
 function generateFilename(originalFilename) {
