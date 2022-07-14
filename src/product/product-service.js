@@ -65,7 +65,7 @@ exports.postProduct = (product, result) => {
                         .jpeg({ quality: 60 })
                         .toFile(path.resolve(finalPath, product.image), (err, info) => {
                             // delete original unresized file
-                            fs.unlink(path.resolve(destination, product.image), (error) => {})
+                            fs.unlink(newPathTMP, (error) => {})
                             
                             return result(err, data);
                         })
@@ -107,7 +107,7 @@ exports.putProduct = (id, product, result) => {
     this.getProductTypes((err, productTypes) => {
         if(productTypes.filter(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).length > 0){
             product.type = productTypes.find(productType => productType.type === product.type || productType.id.toString() === product.type.toString()).id;
-            
+
             // delete old image stored on server
             this.deleteImageFileProduct(id);
 
@@ -124,7 +124,7 @@ exports.putProduct = (id, product, result) => {
                         .jpeg({ quality: 60 })
                         .toFile(path.resolve(finalPath, product.image), (err, info) => {
                             // delete original unresized file
-                            fs.unlink(path.resolve(destination, product.image), (error) => {})
+                            fs.unlink(newPathTMP, (error) => {})
                             
                             return result(err, data);
                         })
