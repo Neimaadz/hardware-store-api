@@ -8,7 +8,7 @@ const cors = require('cors');
 // *******************************************
 const config = require('./app-config.json')
 const productController = require('./src/product/product-controller')
-const homePageManagerController = require('./src/homepage-manager/homepage-manager-controller')
+const homepageManagerController = require('./src/homepage-manager/homepage-manager-controller')
 const authenticationController = require('./src/authentication/authentication-controller')
 
 
@@ -24,6 +24,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // use to get image stored in API
 app.use(config.rootAPI +'/public/images/product/', express.static("public/images/PRODUCT/"));
+app.use(config.rootAPI +'/public/images/welcome/', express.static("public/images/WELCOME/"));
+app.use(config.rootAPI +'/public/images/news/', express.static("public/images/NEWS/"));
 
 
 const checkToken = (req, res, next) => {
@@ -64,14 +66,12 @@ router.delete('/product/:id', checkToken, productController.deleteProduct)
 
 /*
 ======================================================================================
-====                 MAIN PAGE MANAGER                                            ====
+====                 HOMEPAGE MANAGER                                            ====
 ======================================================================================
 */
-router.get('/welcomeImages', checkToken, homePageManagerController.getWelcomeImage)
-router.put('/welcomeImages/:id', checkToken, homePageManagerController.putWelcomeImage)
-
-router.get('/newsImages', checkToken, homePageManagerController.getNewsImage)
-router.put('/newsImages/:id', checkToken, homePageManagerController.putNewsImage)
+router.get('/welcomeImages', checkToken, homepageManagerController.getWelcomeImages)
+router.get('/newsImages', checkToken, homepageManagerController.getNewsImages)
+router.put('/homepage/:id', checkToken, homepageManagerController.putHomepage)
 
 
 app.use(config.rootAPI, router)   //permet de créer une route

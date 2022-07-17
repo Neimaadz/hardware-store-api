@@ -13,6 +13,12 @@ exports.Product = function (id, name, fabricant, type, longueur, diametre, taill
     this.image = image;
 }
 
+exports.Homepage = function (id, type, image) {
+    this.id = id;
+    this.type = type;
+    this.image = image;
+}
+
 exports.Authentication = function (token, user) {
     this.token = token;
     this.user = user;
